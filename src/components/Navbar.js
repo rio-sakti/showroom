@@ -1,22 +1,12 @@
 
 import React from 'react';
 import { Menubar } from 'primereact/menubar';
-import { InputText } from 'primereact/inputtext';
-import { Badge } from 'primereact/badge';
-import { Avatar } from 'primereact/avatar';  
 import { useNavigate } from 'react-router-dom';
 import Logo from '../logo.png';
 
 export default function TemplateDemo() {
     const navigate = useNavigate();
-    const itemRenderer = (item) => (
-        <a className="flex align-items-center p-menuitem-link">
-            <span className={item.icon} />
-            <span className="mx-2">{item.label}</span>
-            {item.badge && <Badge className="ml-auto" value={item.badge} />}
-            {item.shortcut && <span className="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{item.shortcut}</span>}
-        </a>
-    );
+
     const items = [
         {
             label: 'Dashboard',
@@ -25,7 +15,7 @@ export default function TemplateDemo() {
         },
         {
             label: 'Transaction',
-            icon: 'pi pi-table',
+            icon: 'pi pi-sync',
             command:()=> navigate("/transaction")
         },
         {
