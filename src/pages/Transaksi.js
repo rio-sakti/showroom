@@ -96,11 +96,12 @@ function Transaksi() {
         if (formData.id==='') {
             payload.id = `ID-${Date.now()}-${uuidv4().slice(0, 8)}`;
             upsertData = fData.concat(payload);
+            upsertTrx(upsertData);
         } else {
             upsertData = payload;
         }
    
-        upsertTrx(upsertData);
+        
         setFormData({
             id: '',
             jenis: '',
