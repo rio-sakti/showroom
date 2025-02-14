@@ -1,13 +1,11 @@
-import "../App.css";
-import { useState, useEffect } from 'react';
-import { Panel } from "primereact/panel";
+import React, { useState, useEffect } from 'react';
+import { Panel } from 'primereact/panel';
 import { Chart } from 'primereact/chart';
-// import transaksiStore from "../stores/zustand/Store";
 
 function Dashboard() {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
-  // const dataTrx = transaksiStore();
+
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);
     const data = {

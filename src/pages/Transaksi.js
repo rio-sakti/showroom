@@ -11,21 +11,20 @@ import transaksiStore from "../stores/zustand/Store";
 import { v4 as uuidv4 } from 'uuid';
 import Swal from "sweetalert2";
 
-
 function Transaksi() {
-    // const [tanggal, setTanggal] = useState(null);
     const optTrx = ['Jual', 'Beli'];
     const { dataTrx, upsertTrx } = transaksiStore();
     const [formData, setFormData] = useState({
         id: '',
         jenis: '',
-        tanggal: null,
-        unitKend: null,
+        tanggal: '',
+        unitKend: '',
         unitDesc: '',
-        tahun: null,
-        harga: null
+        tahun: '',
+        harga: ''
     });
 
+    
     const units = [
         { name: 'Toyota Avanza', code: '01' },
         { name: 'Daihatsu Xenia', code: '02' },
@@ -36,13 +35,20 @@ function Transaksi() {
 
     const tahunTemplate = (item) => {
         const xTahun = new Date(item.tahun).getFullYear();
+        console.log(xTahun);
         return xTahun;
     }
 
     const tanggalTemplate = (e) => {
-        const date = e.tanggal;
-        const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-        return formattedDate;   
+        if (e.tanggal==='') {
+            return '';
+        }
+        console.log("Tanggal : ", e.tanggal);
+        const date = new Date(e.tanggal);
+        // const formattedDate = ${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")};
+        const formattedDate = `${String(date.getFullYear())}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        console.log(formattedDate);
+        return formattedDate;
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -60,10 +66,10 @@ function Transaksi() {
         setFormData({
             id: rowData.id,
             jenis: rowData.jenis,
-            tanggal: rowData.tanggal,
+            tanggal: new Date(rowData.tanggal),
             unitKend: rowData.unitKend,
             unitDesc: rowData.unitKend.name,
-            tahun: rowData.tahun,
+            tahun: new Date(rowData.tahun),
             harga: rowData.harga
         });
         // setJnsTrx(rowData.jenis);
@@ -89,27 +95,24 @@ function Transaksi() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(e);
-        const fData = dataTrx;
-        let upsertData = fData; 
+        let fData = dataTrx;
+        let upsertData = fData;
         let payload = formData;
-        if (formData.id==='') {
+        if (formData.id === '') {
             payload.id = `ID-${Date.now()}-${uuidv4().slice(0, 8)}`;
-            upsertData = fData.concat(payload);
-            upsertTrx(upsertData);
-        } else {
-            upsertData = payload;
         }
-   
-        
+        upsertData = fData.concat(payload);
+        console.log(upsertData);
+        upsertTrx(upsertData);
         setFormData({
             id: '',
             jenis: '',
-            tanggal: null,
-            unitKend: null,
-            unitDesc: null,
-            tahun: null,
-            harga: null
-        });;
+            tanggal: '',
+            unitKend: '',
+            unitDesc: '',
+            tahun: '',
+            harga: ''
+        });
     }
     console.log(dataTrx);
     return (
@@ -118,36 +121,33 @@ function Transaksi() {
                 <Panel header="Form Transaksi">
                     <form onSubmit={handleSubmit}>
                         <div className="card p-fluid">
-                            <div class="field">
+                            <div className="field">
                                 <div className="card flex justify-content-center">
                                     <SelectButton value={formData.jenis} onChange={(e) => setFormData({ ...formData, jenis: e.target.value })} options={optTrx} />
                                 </div>
                             </div>
-                            <div class="field">
+                            <div className="field">
                                 <label htmlFor="tglTrx" >Tanggal</label>
-                                <div class="col">
+                                <div className="col">
                                     <Calendar inputId="tglTrx" maxDate={new Date()} dateFormat="dd-mm-yy"
-                                        showIcon value={formData.tanggal ? new Date(formData.tanggal) : null}
-                                        // onChange={(e) => setFormData({ ...formData, tanggal: e.value })}
+                                        showIcon value={formData.tanggal ? new Date(formData.tanggal) : ''}
                                         onChange={(e) => {
-                                            // const date = e.value;
-                                            // const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
                                             setFormData({ ...formData, tanggal: e.value });
                                         }}
                                     />
 
                                 </div>
                             </div>
-                            <div class="field">
+                            <div className="field">
                                 <label htmlFor="unit" >Unit Kendaraan</label>
-                                <div class="col">
+                                <div className="col">
                                     <Dropdown value={formData.unitKend} onChange={(e) => setFormData({ ...formData, unitKend: e.target.value, unitDesc: e.target.value.name })} options={units} optionLabel="name"
                                         placeholder="Pilih Unit" className="w-full md:w-14rem" />
                                 </div>
                             </div>
-                            <div class="field">
+                            <div className="field">
                                 <label htmlFor="tahun" >Tahun</label>
-                                <div class="col">
+                                <div className="col">
                                     <Calendar value={formData.tahun}
                                         onChange={(e) => {
                                             setFormData({ ...formData, tahun: e.value });
@@ -156,13 +156,13 @@ function Transaksi() {
                                     />
                                 </div>
                             </div>
-                            <div class="field">
+                            <div className="field">
                                 <label htmlFor="harga" >Harga</label>
-                                <div class="col">
+                                <div className="col">
                                     <InputText className="p-inputtext-sm" value={formData.harga} onChange={(e) => setFormData({ ...formData, harga: e.target.value })} />
                                 </div>
                             </div>
-                            <div class="field">
+                            <div className="field">
                                 <Button label="Submit" size="small" />
                             </div>
                         </div>
@@ -171,7 +171,7 @@ function Transaksi() {
             </div>
             <div className="col-12 md:col-8">
                 <Panel header="History">
-                    <DataTable value={dataTrx} size="small" tableStyle={{ minWidth: '50rem' }}>
+                    <DataTable value={Array.isArray(dataTrx) ? dataTrx : Object.values(dataTrx)} tableStyle={{ minWidth: '50rem' }}>
                         <Column field="id" hidden="true">id</Column>
                         <Column field="jenis" header="Jual/Beli"></Column>
                         <Column body={tanggalTemplate} field="tanggal" header="Tanggal"></Column>
