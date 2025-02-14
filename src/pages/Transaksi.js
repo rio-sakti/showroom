@@ -95,13 +95,17 @@ function Transaksi() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(e);
-        let fData = dataTrx;
+        const fData = dataTrx;
         let upsertData = fData;
         let payload = formData;
+        console.log("fData => ", fData);
+        console.log("dormData => ", formData);
         if (formData.id === '') {
             payload.id = `ID-${Date.now()}-${uuidv4().slice(0, 8)}`;
+            upsertData = fData.concat(payload);
+        } else {
+            upsertData = [].concat(payload);
         }
-        upsertData = fData.concat(payload);
         console.log(upsertData);
         upsertTrx(upsertData);
         setFormData({
@@ -113,6 +117,7 @@ function Transaksi() {
             tahun: '',
             harga: ''
         });
+        Swal.fire("Data berhasil disimpan!", "", "success");
     }
     console.log(dataTrx);
     return (
