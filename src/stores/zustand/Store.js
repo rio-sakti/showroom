@@ -1,7 +1,7 @@
 import { create } from "zustand"; 
 import { persist } from "zustand/middleware"; 
 
-const useStore = create( 
+const transaksiStore = create( 
     persist( (set) => ({ 
         dataTrx: [],
         upsertTrx: (val) => set({ dataTrx: val }), 
@@ -11,4 +11,4 @@ const useStore = create(
     })
 );
 
-export default useStore;
+export default transaksiStore;
