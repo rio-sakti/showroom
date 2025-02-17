@@ -35,7 +35,6 @@ function Transaksi() {
 
     const tahunTemplate = (item) => {
         const xTahun = new Date(item.tahun).getFullYear();
-        console.log(xTahun);
         return xTahun;
     }
 
@@ -43,11 +42,8 @@ function Transaksi() {
         if (e.tanggal==='') {
             return '';
         }
-        console.log("Tanggal : ", e.tanggal);
         const date = new Date(e.tanggal);
-        // const formattedDate = ${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")};
         const formattedDate = `${String(date.getFullYear())}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-        console.log(formattedDate);
         return formattedDate;
     }
 
@@ -61,7 +57,6 @@ function Transaksi() {
     };
 
     const handleEdit = (rowData) => {
-        console.log("Edit:", rowData);
 
         setFormData({
             id: rowData.id,
@@ -72,8 +67,6 @@ function Transaksi() {
             tahun: new Date(rowData.tahun),
             harga: rowData.harga
         });
-        // setJnsTrx(rowData.jenis);
-        // setUnitTrx({ code: rowData.unitKend.code,  name: rowData.unitKend.name });
     };
 
     const handleDelete = (rowData) => {
@@ -94,20 +87,16 @@ function Transaksi() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e);
-        const fData = dataTrx;
-        let upsertData = fData;
-        let payload = formData;
-        console.log("fData => ", fData);
-        console.log("dormData => ", formData);
+        let updatedData = [...dataTrx];
+        let payload = { ...formData };
         if (formData.id === '') {
             payload.id = `ID-${Date.now()}-${uuidv4().slice(0, 8)}`;
-            upsertData = fData.concat(payload);
+            updatedData.push(payload);
         } else {
-            upsertData = [].concat(payload);
+            updatedData = dataTrx.map(item =>
+            item.id === formData.id ? payload : item);
         }
-        console.log(upsertData);
-        upsertTrx(upsertData);
+        upsertTrx(updatedData);
         setFormData({
             id: '',
             jenis: '',
@@ -119,7 +108,6 @@ function Transaksi() {
         });
         Swal.fire("Data berhasil disimpan!", "", "success");
     }
-    console.log(dataTrx);
     return (
         <div className="grid mt-5">
             <div className="col-12 md:col-4">

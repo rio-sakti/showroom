@@ -12,7 +12,7 @@ export default function Profiles() {
                     <img alt="profile" src={ImgProfile} height="200" className="mr-1"></img>
                     </div>
                     <div>
-                        <label >Nama : Rio Tyas Baito</label>
+                        <label>Nama : Rio Tyas Baito</label>
                     </div>
                     <div>
                         <label>Email : rio.tyas.baito@gmail.com</label>
